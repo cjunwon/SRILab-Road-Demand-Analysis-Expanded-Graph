@@ -7,8 +7,8 @@ import random
 import igraph as ig
 
 
-print("Importing nodes_edges_ucla_big_graph.pickle...")
-with open(r'nodes_edges_ucla_big_graph.pickle', 'rb') as handle:
+print("Importing nodes_edges_ucla_access.pickle...")
+with open(r'nodes_edges_ucla_access.pickle', 'rb') as handle:
     B_matrix_sliced,B_matrix_str_sliced,nodes_coordinates_array = pickle.load(handle)
 
 
@@ -22,14 +22,48 @@ B_matrix_sliced = B_matrix_sliced.astype(int)
 print("Creating graph using B_matrix_sliced...")
 time_start = time.time()
 
+# g = ig.Graph(directed=True)
+# g.add_vertices(np.max(B_matrix_sliced[:, :2]) + 1)
+# edges = [(int(B_matrix_sliced[i, 0]), int(B_matrix_sliced[i, 1])) for i in range(len(B_matrix_sliced))]
+# g.add_edges(edges)
+# g.es['weight'] = B_matrix_sliced[:, 4]
+
+# Create an empty directed graph
 g = ig.Graph(directed=True)
-g.add_vertices(np.max(B_matrix_sliced[:, :2]) + 1)  # assuming nodes are labeled 0 to n-1
-edges = [(int(B_matrix_sliced[i, 0]), int(B_matrix_sliced[i, 1])) for i in range(len(B_matrix_sliced))]
-g.add_edges(edges)
-g.es['weight'] = B_matrix_sliced[:, 4]
+
+vertices = set(B_matrix_sliced[:, 0]).union(set(B_matrix_sliced[:, 1]))
+g.add_vertices(list(vertices))
+
+for i in range(len(B_matrix_sliced)):
+    oneway = B_matrix_str_sliced[i, 2]
+    edge_attrs = {
+        "sect_id": str(B_matrix_str_sliced[i, 3]),
+        "distance": int(B_matrix_sliced[i, 2]),
+        "speed": int(B_matrix_sliced[i, 3]),
+        "weight": B_matrix_sliced[i, 4],
+        "walk_min": B_matrix_sliced[i, 5],
+        "name": str(B_matrix_str_sliced[i, 0]),
+        "roadtype": str(B_matrix_str_sliced[i, 1])
+    }
+
+    if oneway is None:
+        g.add_edge(int(B_matrix_sliced[i, 0]), int(B_matrix_sliced[i, 1]), **edge_attrs)
+        g.add_edge(int(B_matrix_sliced[i, 1]), int(B_matrix_sliced[i, 0]), **edge_attrs)
+    elif oneway == "FT":
+        g.add_edge(int(B_matrix_sliced[i, 0]), int(B_matrix_sliced[i, 1]), **edge_attrs)
+    elif oneway == "TF":
+        g.add_edge(int(B_matrix_sliced[i, 1]), int(B_matrix_sliced[i, 0]), **edge_attrs)
+    else:
+        print("Error")
 
 time_end = time.time()
 print("Time taken to create graph:", (time_end - time_start) / 60, "minutes")
+
+# export the graph to a pickle file
+
+# print("Exporting graph to intermediate_files/graph.pickle...")
+# with open(r'intermediate_files/graph.pickle', 'wb') as handle:
+#     pickle.dump(g, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 del B_matrix_sliced, B_matrix_str_sliced, nodes_coordinates_array
 
@@ -40,7 +74,7 @@ for key, value in Node_to_Node_pairs:
     Node_to_Node_pairs_dict[key].append(value)
 
 # Node_to_Node_pairs_len = len(Node_to_Node_pairs)
-del Node_to_Node_pairs
+# del Node_to_Node_pairs
 
 # print("Subsetting origin_nodes_list...")
 # origin_nodes_list = list(Node_to_Node_pairs_dict.keys())
@@ -51,6 +85,8 @@ del Node_to_Node_pairs
 # print("Creating Node_to_Node_pairs_dict_subset...")
 # Node_to_Node_pairs_dict_subset = {k: v for k, v in Node_to_Node_pairs_dict.items() if k in origin_nodes_list_subset}
 Node_to_Node_pairs_dict_subset = Node_to_Node_pairs_dict
+
+del Node_to_Node_pairs_dict
 
 # count the total number of pairs in Node_to_Node_pairs_dict_subset from keys and values
 total_subset_pairs = 0
