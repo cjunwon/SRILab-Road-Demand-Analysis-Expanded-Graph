@@ -107,3 +107,8 @@ with open('intermediate_files/Origin_Destination_Node_Added_array.pickle', 'wb')
 print('Exporting block_pairing_count_list to a pickle file...')
 with open('intermediate_files/block_pairing_count_list.pickle', 'wb') as handle:
     pickle.dump(block_pairing_count_list, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+# Export LODES_adjusted to a pickle file
+print('Exporting Block_to_Block_Pairs, LODES_adjusted, block_pairing_count_list to a pickle file together...')
+with open('intermediate_files/LODES_adjusted_block_pairing_count_list.pickle', 'wb') as handle:
+    pickle.dump([Block_to_Block_Pairs, LODES_adjusted, block_pairing_count_list], handle, protocol=pickle.HIGHEST_PROTOCOL)
