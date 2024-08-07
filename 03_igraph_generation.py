@@ -11,24 +11,20 @@ import igraph as ig
 with open(r'nodes_edges_ucla_big_graph.pickle', 'rb') as handle:
     B_matrix_sliced,B_matrix_str_sliced,nodes_coordinates_array = pickle.load(handle)
 
-# convert all values in B_matrix_sliced from float to int
-B_matrix_sliced = B_matrix_sliced.astype(int)
-
 print("Creating graph using B_matrix_sliced...")
 time_start = time.time()
 
-
 g = ig.Graph(directed=True)
 
-vertices = set(B_matrix_sliced[:, 0]).union(set(B_matrix_sliced[:, 1]))
+vertices = set(B_matrix_sliced[:, 0].astype(int)).union(set(B_matrix_sliced[:, 1].astype(int)))
 g.add_vertices(list(vertices))
 
 for i in range(len(B_matrix_sliced)):
     oneway = B_matrix_str_sliced[i, 2]
     edge_attrs = {
         "sect_id": str(B_matrix_str_sliced[i, 3]),
-        "distance": int(B_matrix_sliced[i, 2]),
-        "speed": int(B_matrix_sliced[i, 3]),
+        "distance": B_matrix_sliced[i, 2],
+        "speed": B_matrix_sliced[i, 3],
         "weight": B_matrix_sliced[i, 4],
         "walk_min": B_matrix_sliced[i, 5],
         "name": str(B_matrix_str_sliced[i, 0]),
