@@ -1,14 +1,11 @@
 import pickle
-import numpy as np
-import pandas as pd
 import time
-from collections import defaultdict
-import random
 import igraph as ig
+from tqdm import tqdm
 
-# print("Importing nodes_edges_ucla_access.pickle...")
-# with open(r'nodes_edges_ucla_access.pickle', 'rb') as handle:
-with open(r'nodes_edges_ucla_big_graph.pickle', 'rb') as handle:
+print("Importing nodes_edges_ucla_access.pickle...")
+with open(r'nodes_edges_ucla_access.pickle', 'rb') as handle:
+# with open(r'nodes_edges_ucla_big_graph.pickle', 'rb') as handle:
     B_matrix_sliced,B_matrix_str_sliced,nodes_coordinates_array = pickle.load(handle)
 
 print("Creating graph using B_matrix_sliced...")
@@ -19,7 +16,7 @@ g = ig.Graph(directed=True)
 vertices = set(B_matrix_sliced[:, 0].astype(int)).union(set(B_matrix_sliced[:, 1].astype(int)))
 g.add_vertices(list(vertices))
 
-for i in range(len(B_matrix_sliced)):
+for i in tqdm(range(len(B_matrix_sliced)), desc="Adding edges"):
     oneway = B_matrix_str_sliced[i, 2]
     edge_attrs = {
         "sect_id": str(B_matrix_str_sliced[i, 3]),

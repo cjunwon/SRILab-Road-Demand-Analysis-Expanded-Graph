@@ -1,24 +1,20 @@
+print('Importing libraries...')
+
 import pickle
 import numpy as np
 import geopandas as gpd
 import numpy as np
 import pickle
-import boto3
 
-print('Importing B_matrix_weighted_array_0_to_141592.pickle...')
+print('Importing B_matrix_weighted_array_0_to_156243.pickle...')
 
-with open(r'intermediate_files/B_matrix_weighted_array_0_to_141592.pickle', 'rb') as handle:
+with open(r'intermediate_files/B_matrix_weighted_array_0_to_156243.pickle', 'rb') as handle:
     B_matrix_weighted_array = pickle.load(handle) 
 
-print('Importing nodes_edges_ucla_big_graph.pickle...')
+print('Importing nodes_edges_ucla_access.pickle...')
 
-with open(r'nodes_edges_ucla_big_graph.pickle', 'rb') as handle:
+with open(r'nodes_edges_ucla_access.pickle', 'rb') as handle:
     B_matrix_sliced,B_matrix_str_sliced,nodes_coordinates_array = pickle.load(handle)
-
-print('Importing B_matrix_weighted_array.pickle...')
-
-with open(r'intermediate_files/B_matrix_weighted_array.pickle', 'rb') as handle:
-    B_matrix_weighted_array_ORIGINAL = pickle.load(handle)
 
 print('Importing ucla_large_centrality_roi.geojson...')
 

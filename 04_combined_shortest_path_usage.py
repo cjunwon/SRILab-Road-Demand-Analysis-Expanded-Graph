@@ -1,3 +1,5 @@
+print("Importing libraries...")
+
 import numpy as np
 import pandas as pd
 import time
@@ -9,14 +11,14 @@ from itertools import islice
 
 ################### IMPORTANT SPECIFICATION TO CONTROL RUN SIZE ###################
 
-# There are len(Node_to_Node_pairs_dict) = 141593 origin nodes to compute.
+# There are len(Node_to_Node_pairs_dict) = 156244 origin nodes to compute.
 # You can specify how much to compute for each script run.
 
 START_INDEX = 0 # CHANGE AS NEEDED
-END_INDEX = 141593 # CHANGE AS NEEDED
-# END_INDEX = 141593
+END_INDEX = 156244 # CHANGE AS NEEDED
+# END_INDEX = 156244
 
-# To run all in one go, set START_INDEX = 0, END_INDEX = 141593
+# To run all in one go, set START_INDEX = 0, END_INDEX = 156244
 
 # You can also specify the desired chunk size here.
 CHUNK_SIZE = 10
@@ -34,8 +36,8 @@ print("Importing intermediate_files/igraph.pickle...")
 with open(r'intermediate_files/igraph.pickle', 'rb') as handle:
     g = pickle.load(handle)
 
-print("Importing intermediate_files/nodes_edges_ucla_big_graph.pickle...")
-with open(r'nodes_edges_ucla_big_graph.pickle', 'rb') as handle:
+print("Importing intermediate_files/nodes_edges_ucla_access.pickle...")
+with open(r'nodes_edges_ucla_access.pickle', 'rb') as handle:
     B_matrix_sliced,B_matrix_str_sliced,nodes_coordinates_array = pickle.load(handle)
 
 print("Importing intermediate_files/LODES_adjusted_block_pairing_count_list.pickle...")

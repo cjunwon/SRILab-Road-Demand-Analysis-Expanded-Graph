@@ -1,23 +1,14 @@
+print("Importing libraries...")
+
 import pickle
 import numpy as np
-import matplotlib.pyplot as plt
-import networkx as nx
-import geopandas as gpd
 import pandas as pd
-import numpy as np
 import pickle
-from shapely import Point
-from shapely.ops import nearest_points
-from rtree import index
-from tqdm import tqdm
-
 from itertools import product
-
-from shapely.geometry import Point, Polygon, LineString,MultiLineString
 
 # import Node_Block.pkl
 
-print("Importing files...")
+print("Loading files...")
 with open(r'intermediate_files/Node_Block.pkl', 'rb') as f:
     Node_Block = pickle.load(f)
 
@@ -45,10 +36,16 @@ Origin_Destination_Node_Added = Origin_Destination.copy()
 Origin_Destination_Node_Added = Origin_Destination_Node_Added.drop(columns=['createdate'])
 
 # Map nodes to work and home blocks
+
+print("Mapping nodes to work and home blocks...")
+
 Origin_Destination_Node_Added['w_node_id'] = Origin_Destination_Node_Added['w_geocode'].map(block_node_dict)
 Origin_Destination_Node_Added['h_node_id'] = Origin_Destination_Node_Added['h_geocode'].map(block_node_dict)
 
 # Remove rows where the node columns are missing (i.e. the block is not in the node dictionary)
+
+print("Removing rows where the node columns are missing...")
+
 Origin_Destination_Node_Added = Origin_Destination_Node_Added[Origin_Destination_Node_Added['w_node_id'].notnull()]
 Origin_Destination_Node_Added = Origin_Destination_Node_Added[Origin_Destination_Node_Added['h_node_id'].notnull()]
 
@@ -58,7 +55,9 @@ Origin_Destination_Node_Added_array = Origin_Destination_Node_Added.to_numpy()
 Block_to_Block_Pairs = Origin_Destination_Node_Added_array[:, 0:2]
 
 # check if each row in Block_to_Block_Pairs array is a unique pair
+
 print('Checking if each row in Block_to_Block_Pairs array is a unique pair...')
+
 Block_to_Block_Pairs = Block_to_Block_Pairs.astype(float)  # or int, depending on your data
 unique_rows = np.unique(Block_to_Block_Pairs, axis=0)
 is_all_unique = len(Block_to_Block_Pairs) == len(unique_rows)
